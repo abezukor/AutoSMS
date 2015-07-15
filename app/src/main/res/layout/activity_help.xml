@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+    <ScrollView android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Help"
+        android:textSize="50sp"
+        android:id="@+id/tophelp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:gravity="center_vertical|center_horizontal" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Create AutoSMS:"
+        android:id="@+id/creattext"
+        android:layout_below="@+id/tophelp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="To create an AutoSMS first tap a Add Auto SMS"
+        android:id="@+id/createbeg"
+        android:layout_below="@+id/creattext"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <ImageView
+        android:layout_width="180sp"
+        android:layout_height="320sp"
+        android:id="@+id/addbtnimg"
+        android:src="@drawable/addbtn"
+        android:layout_below="@+id/createbeg"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Then Enter The number you want to sent the text to, the message you want texted, and the name of the shortcut on your home screen."
+        android:id="@+id/entertxt"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/addbtnimg"/>
+    <ImageView
+        android:layout_width="180sp"
+        android:layout_height="320sp"
+        android:id="@+id/textenterimg"
+        android:src="@drawable/enterintofields"
+        android:layout_below="@+id/entertxt"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Then click The save button"
+        android:id="@+id/savetxt"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/textenterimg"/>
+        <ImageView
+            android:layout_width="180sp"
+            android:layout_height="320sp"
+            android:id="@+id/savebtning"
+            android:src="@drawable/save"
+            android:layout_below="@+id/savetxt"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Now there should be a shortcut on your home screen."
+            android:id="@+id/shortcuttxt"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/savebtning"/>
+
+        <ImageView
+            android:layout_width="180sp"
+            android:layout_height="320sp"
+            android:id="@+id/shotcut"
+            android:src="@drawable/shortcut"
+            android:layout_below="@+id/shortcuttxt"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+    </RelativeLayout>
+    </ScrollView>
+
+</RelativeLayout>
