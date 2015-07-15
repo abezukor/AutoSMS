@@ -14,4 +14,4 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 
-An Android app that lets you create a home screen shortcut to send a text. You should be able to just install the included binary or the APK in th app folder. Do what ever the heck you want with this
+An Android app that lets you create a home screen shortcut to send a text. You should be able to just install the included binary or the APK in th app folder.
