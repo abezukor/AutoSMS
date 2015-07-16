@@ -138,7 +138,7 @@ public class RelativeLayoutActivity extends android.app.Activity {
         context.sendBroadcast(intent);
     }
     public void deletebtn(View view){
-        Toast.makeText(getApplicationContext(), "Please remove old Shortcut from home screen. The App will no longer remember it.", Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), "Please remove old Shortcut from home screen. AutoSMS will no longer remember it.", Toast.LENGTH_LONG).show();
         SharedPreferences contacsnumberfile = context.getSharedPreferences("contacnumber", MODE_PRIVATE);
         int contactnumberint = contacsnumberfile.getInt("ContacsNumber", 0);
         SharedPreferences userDetails = context.getSharedPreferences("contacs", MODE_PRIVATE);
