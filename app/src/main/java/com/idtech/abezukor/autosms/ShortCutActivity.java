@@ -13,11 +13,13 @@ public class ShortCutActivity extends android.app.Activity {
         setContentView(R.layout.activity_shortcut);
         Intent intent = getIntent();
         //Toast.makeText(getApplicationContext(), intent.getStringExtra("message") , Toast.LENGTH_LONG).show();
+        //see if it will send the sms
         try {
             SmsManager smsManager = SmsManager.getDefault();
             smsManager.sendTextMessage(intent.getStringExtra("number"), null, intent.getStringExtra("message"), null, null);
             stop();
         } catch(NumberFormatException nfe) {
+            //if not
             Toast.makeText(getApplicationContext(), intent.getStringExtra("Sorry There Was an Error") , Toast.LENGTH_LONG).show();
             stop();
 
@@ -25,6 +27,7 @@ public class ShortCutActivity extends android.app.Activity {
     }
 
     public void stop(){
+        //goes back to home page to close
         Intent intent = new Intent(this, ListViewActivity.class);
         intent.putExtra("fromonebutton", true);
         startActivity(intent);

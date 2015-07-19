@@ -59,7 +59,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Then Enter The number you want to sent the text to, the message you want texted, and the name of the shortcut on your home screen."
+        android:text="Then enter the number you want to sent the text to, the message you want texted, and the name of the shortcut on your home screen."
         android:id="@+id/entertxt"
         android:layout_alignParentLeft="true"
         android:layout_below="@id/addbtnimg"/>
@@ -75,7 +75,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Then click The save button"
+        android:text="Then click The save button."
         android:id="@+id/savetxt"
         android:layout_alignParentLeft="true"
         android:layout_below="@id/textenterimg"/>
@@ -91,7 +91,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Now there should be a shortcut on your home screen."
+            android:text="Now there should be a shortcut on your home screen thats looks like this."
             android:id="@+id/shortcuttxt"
             android:layout_alignParentLeft="true"
             android:layout_below="@id/savebtning"/>
