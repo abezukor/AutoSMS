@@ -1,7 +1,6 @@
 package com.idtech.abezukor.autosms;
 
 import android.app.Activity;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -71,67 +70,41 @@ public class RelativeLayoutActivity extends android.app.Activity {
         EditText message = (EditText)findViewById(R.id.message);
         EditText number = (EditText)findViewById(R.id.number);
         EditText name = (EditText)findViewById(R.id.name);
-        //checks for balnc fields
-        if  (message.getText().toString().isEmpty() == false && number.getText().toString().isEmpty() ==false &&  name.getText().toString().isEmpty() ==false) {
-            //sets contact to add
-            String contact = number.getText().toString() + " %tosplit%  " + message.getText().toString() + "  %tosplit% " + name.getText().toString();
-            String contactnumberstr = "-1";
+        //if  (message.getText().toString().isEmpty()
+        //sets contact to add
+        String contact = number.getText().toString() + " %tosplit%  " + message.getText().toString() +"  %tosplit% " + name.getText().toString();
+        String contactnumberstr = "-1";
 
-            if (modify == false) {
-                //if you are not modifying a pre written AutoSMS
-                SharedPreferences contacsnumberfile = context.getSharedPreferences("contacnumber", MODE_PRIVATE);
-                int contactnumberint = contacsnumberfile.getInt("ContacsNumber", 0);
-                contactnumberstr = String.valueOf(contactnumberint + 1);
-                Editor edit = contacsnumberfile.edit();
-                //edit.clear();
-                edit.putInt("ContacsNumber", contactnumberint + 1);
-                edit.commit();
-            } else {
-                //if you are modifying
-                contactnumberstr = String.valueOf(contactnumberint2);
-                Toast.makeText(getApplicationContext(), "Please remove old Shortcut from home screen. A new one has been created", Toast.LENGTH_LONG).show();
-            }
+        if (modify==false) {
+            //if you are not modifying a pre written AutoSMS
+            SharedPreferences contacsnumberfile = context.getSharedPreferences("contacnumber", MODE_PRIVATE);
+            int contactnumberint = contacsnumberfile.getInt("ContacsNumber", 0);
+            contactnumberstr = String.valueOf(contactnumberint + 1);
+            Editor edit = contacsnumberfile.edit();
+            //edit.clear();
+            edit.putInt("ContacsNumber", contactnumberint + 1);
+            edit.commit();
+        }
+        else{
+            //if you are modifying
+            contactnumberstr = String.valueOf(contactnumberint2);
+            Toast.makeText(getApplicationContext(), "Please remove old Shortcut from home screen. A new one has been created", Toast.LENGTH_LONG).show();
+        }
 
-            SharedPreferences userDetails = context.getSharedPreferences("contacs", MODE_PRIVATE);
-            //do the edit
-            Editor edit2 = userDetails.edit();
-            edit2.putString(contactnumberstr, contact);
-            edit2.commit();
-            ShortcutCreatorActivity(number.getText().toString(), message.getText().toString(), name.getText().toString());
-            //go back to main page
-            Intent intent = new Intent(this, ListViewActivity.class);
-            intent.putExtra("button pressed", buttonpressed);
-            startActivity(intent);
-        }
-        //if any fields are blank
-        else {
-            Toast.makeText(getApplicationContext(), "Please fill in all fields", Toast.LENGTH_LONG).show();
-        }
+        SharedPreferences userDetails = context.getSharedPreferences("contacs", MODE_PRIVATE);
+        //do the edit
+        Editor edit2 = userDetails.edit();
+        edit2.putString(contactnumberstr, contact);
+        edit2.commit();
+        ShortcutCreatorActivity(number.getText().toString(), message.getText().toString(), name.getText().toString());
+        //go back to main page
+        Intent intent = new Intent(this, ListViewActivity.class);
+        intent.putExtra("button pressed", buttonpressed);
+        startActivity(intent);
+
         }
         //to create a shortcut
         protected void  ShortcutCreatorActivity(String number, String message, String name) {
-            /*
-                Intent shortcut = new Intent("com.android.launcher.action.INSTALL_SHORTCUT");
-
-                // Shortcut name
-                shortcut.putExtra(Intent.EXTRA_SHORTCUT_NAME, name);
-                shortcut.putExtra("duplicate", false);  // Just create once
-
-                //add my extra stuff
-                shortcut.putExtra("number", number);
-                shortcut.putExtra("message", message);
-                // Setup current activity shoud be shortcut object
-                ComponentName comp = new ComponentName(this, ShortCutActivity.class);
-                shortcut.putExtra(Intent.EXTRA_SHORTCUT_INTENT, new Intent(Intent.ACTION_MAIN).setComponent(comp));
-
-                // Set shortcut icon
-                ShortcutIconResource iconRes = Intent.ShortcutIconResource.fromContext(this, R.drawable.ic_launcher);
-                shortcut.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, iconRes);
-
-                sendBroadcast(shortcut);
-              */
-            //Code i know works
-
             //makes intent that is run when the shprtcut is run
             Intent shortcutIntent = new Intent(getApplicationContext(), ShortCutActivity.class);
             shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -185,22 +158,9 @@ public class RelativeLayoutActivity extends android.app.Activity {
         }
         intent.setAction("com.android.launcher.action.UNINSTALL_SHORTCUT");
         context.sendBroadcast(intent);
-    }
-    private void delShortcut(){
-        Intent shortcut = new Intent("com.android.launcher.action.UNINSTALL_SHORTCUT");
-
-        // Shortcut name
-        shortcut.putExtra(Intent.EXTRA_SHORTCUT_NAME, getString(R.string.app_name));
-
-        String appClass = this.getPackageName() + ".ShortCutActivity";
-        ComponentName comp = new ComponentName(this.getPackageName(), appClass);
-        shortcut.putExtra(Intent.EXTRA_SHORTCUT_INTENT, new Intent(Intent.ACTION_MAIN).setComponent(comp));
-
-        sendBroadcast(shortcut);
     }*/
     public void deletebtn(View view){
         //when delete button is tapped
-        //delShortcut();
         Toast.makeText(getApplicationContext(), "Please remove old Shortcut from home screen. AutoSMS will no longer remember it.", Toast.LENGTH_LONG).show();
         //gets the saved file
         SharedPreferences contacsnumberfile = context.getSharedPreferences("contacnumber", MODE_PRIVATE);
