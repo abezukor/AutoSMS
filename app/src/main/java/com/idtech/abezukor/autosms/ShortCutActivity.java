@@ -12,9 +12,10 @@ public class ShortCutActivity extends android.app.Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shortcut);
         Intent intent = getIntent();
+        System.out.println((intent.getStringExtra("number")));
         //Toast.makeText(getApplicationContext(), intent.getStringExtra("message") , Toast.LENGTH_LONG).show();
         //see if it will send the sms
-        try {
+            try {
             SmsManager smsManager = SmsManager.getDefault();
             smsManager.sendTextMessage(intent.getStringExtra("number"), null, intent.getStringExtra("message"), null, null);
             stop();
