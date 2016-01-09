@@ -1,26 +1,18 @@
-package com.idtech.abezukor.autosms;
+package com.abezukor.abezukor.autosms;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
-import android.preference.PreferenceManager;
-
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.content.SharedPreferences.Editor;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.content.Intent.ShortcutIconResource;
 
-import java.net.URISyntaxException;
 import java.util.ArrayList;
-import android.widget.Button;
-import android.widget.TextView;
 
 
 /**
@@ -70,38 +62,40 @@ public class RelativeLayoutActivity extends android.app.Activity {
         EditText message = (EditText)findViewById(R.id.message);
         EditText number = (EditText)findViewById(R.id.number);
         EditText name = (EditText)findViewById(R.id.name);
-        //if  (message.getText().toString().isEmpty()
-        //sets contact to add
-        String contact = number.getText().toString() + " %tosplit%  " + message.getText().toString() +"  %tosplit% " + name.getText().toString();
-        String contactnumberstr = "-1";
+        if  (message.getText().toString().isEmpty() == false && number.getText().toString().isEmpty() ==false &&  name.getText().toString().isEmpty() ==false) {
+            //sets contact to add
+            String contact = number.getText().toString() + " %tosplit%  " + message.getText().toString() + "  %tosplit% " + name.getText().toString();
+            String contactnumberstr = "-1";
 
-        if (modify==false) {
-            //if you are not modifying a pre written AutoSMS
-            SharedPreferences contacsnumberfile = context.getSharedPreferences("contacnumber", MODE_PRIVATE);
-            int contactnumberint = contacsnumberfile.getInt("ContacsNumber", 0);
-            contactnumberstr = String.valueOf(contactnumberint + 1);
-            Editor edit = contacsnumberfile.edit();
-            //edit.clear();
-            edit.putInt("ContacsNumber", contactnumberint + 1);
-            edit.commit();
+            if (modify == false) {
+                //if you are not modifying a pre written AutoSMS
+                SharedPreferences contacsnumberfile = context.getSharedPreferences("contacnumber", MODE_PRIVATE);
+                int contactnumberint = contacsnumberfile.getInt("ContacsNumber", 0);
+                contactnumberstr = String.valueOf(contactnumberint + 1);
+                Editor edit = contacsnumberfile.edit();
+                //edit.clear();
+                edit.putInt("ContacsNumber", contactnumberint + 1);
+                edit.commit();
+            } else {
+                //if you are modifying
+                contactnumberstr = String.valueOf(contactnumberint2);
+                Toast.makeText(getApplicationContext(), "Please remove old Shortcut from home screen. A new one has been created", Toast.LENGTH_LONG).show();
+            }
+
+            SharedPreferences userDetails = context.getSharedPreferences("contacs", MODE_PRIVATE);
+            //do the edit
+            Editor edit2 = userDetails.edit();
+            edit2.putString(contactnumberstr, contact);
+            edit2.commit();
+            ShortcutCreatorActivity(number.getText().toString(), message.getText().toString(), name.getText().toString());
+            //go back to main page
+            Intent intent = new Intent(this, ListViewActivity.class);
+            intent.putExtra("button pressed", buttonpressed);
+            startActivity(intent);
         }
-        else{
-            //if you are modifying
-            contactnumberstr = String.valueOf(contactnumberint2);
-            Toast.makeText(getApplicationContext(), "Please remove old Shortcut from home screen. A new one has been created", Toast.LENGTH_LONG).show();
+        else {
+            Toast.makeText(getApplicationContext(), "Please fill in all fields", Toast.LENGTH_LONG).show();
         }
-
-        SharedPreferences userDetails = context.getSharedPreferences("contacs", MODE_PRIVATE);
-        //do the edit
-        Editor edit2 = userDetails.edit();
-        edit2.putString(contactnumberstr, contact);
-        edit2.commit();
-        ShortcutCreatorActivity(number.getText().toString(), message.getText().toString(), name.getText().toString());
-        //go back to main page
-        Intent intent = new Intent(this, ListViewActivity.class);
-        intent.putExtra("button pressed", buttonpressed);
-        startActivity(intent);
-
         }
         //to create a shortcut
         protected void  ShortcutCreatorActivity(String number, String message, String name) {

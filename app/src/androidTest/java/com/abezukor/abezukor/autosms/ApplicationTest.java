@@ -1,4 +1,4 @@
-package com.idtech.abezukor.autosms;
+package com.abezukor.abezukor.autosms;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

@@ -1,4 +1,4 @@
-package com.idtech.abezukor.autosms;
+package com.abezukor.abezukor.autosms;
 
 /**
  * Created by student on 7/14/15.
@@ -6,7 +6,6 @@ package com.idtech.abezukor.autosms;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;

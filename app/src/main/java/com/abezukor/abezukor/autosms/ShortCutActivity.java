@@ -1,9 +1,7 @@
-package com.idtech.abezukor.autosms;
+package com.abezukor.abezukor.autosms;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.EditText;
 import android.widget.Toast;
 import android.telephony.SmsManager;
 
