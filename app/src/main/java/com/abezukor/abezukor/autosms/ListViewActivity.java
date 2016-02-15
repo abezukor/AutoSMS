@@ -91,6 +91,7 @@ public class ListViewActivity extends ListActivity {
             String contactnumberstr = String.valueOf(i + 1);
             //gtes value for key i+1
             String contact = userDetails.getString(contactnumberstr, "thisdoesnotwork");
+            System.out.println(contact);
             //splits it up
             String[] parts = contact.split(" %tosplit% ");
             //sets to display

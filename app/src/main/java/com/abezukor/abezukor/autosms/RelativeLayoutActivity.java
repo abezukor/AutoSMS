@@ -79,15 +79,21 @@ public class RelativeLayoutActivity extends android.app.Activity {
             } else {
                 //if you are modifying
                 contactnumberstr = String.valueOf(contactnumberint2);
-                Toast.makeText(getApplicationContext(), "Please remove old Shortcut from home screen. A new one has been created", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Your Shortcut has been Updated.", Toast.LENGTH_LONG).show();
             }
 
             SharedPreferences userDetails = context.getSharedPreferences("contacs", MODE_PRIVATE);
             //do the edit
-            Editor edit2 = userDetails.edit();
+            SharedPreferences.Editor edit2 = userDetails.edit();
             edit2.putString(contactnumberstr, contact);
+            System.out.println(contact);
             edit2.commit();
-            ShortcutCreatorActivity(number.getText().toString(), message.getText().toString(), name.getText().toString());
+            System.out.println(userDetails);
+            int contactnuberint3 = Integer.parseInt(contactnumberstr);
+            //checks if its a modifacation so it does not delete shortcut
+            if (modify==false) {
+                ShortcutCreatorActivity(contactnuberint3 + 1, name.getText().toString());
+            }
             //go back to main page
             Intent intent = new Intent(this, ListViewActivity.class);
             intent.putExtra("button pressed", buttonpressed);
@@ -98,13 +104,12 @@ public class RelativeLayoutActivity extends android.app.Activity {
         }
         }
         //to create a shortcut
-        protected void  ShortcutCreatorActivity(String number, String message, String name) {
+        protected void  ShortcutCreatorActivity(int contactnumber, String name) {
             //makes intent that is run when the shprtcut is run
             Intent shortcutIntent = new Intent(getApplicationContext(), ShortCutActivity.class);
             shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            shortcutIntent.putExtra("number", number);
-            shortcutIntent.putExtra("message", message);
+            shortcutIntent.putExtra("contactnumber", contactnumber);
 
             //makes intent to make the shortcut
             Intent addIntent = new Intent();
