@@ -17,9 +17,7 @@ import java.util.ArrayList;
 public class ListViewActivity extends android.app.Activity {
     //sets class wide varybles
     boolean fromshortcut = false;
-    Context context = this;
-    ArrayList<String> arrayList = new ArrayList<String>();
-    String a2;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -32,7 +30,7 @@ public class ListViewActivity extends android.app.Activity {
         //sees if it was from shortcut i9f so close it
         fromshortcut = intent.getBooleanExtra("fromonebutton", false);
 
-        if (fromshortcut == true) {
+        if (fromshortcut) {
             finish();
             System.exit(0);
         }
@@ -70,43 +68,47 @@ public class ListViewActivity extends android.app.Activity {
 
         return super.onOptionsItemSelected(item);
     }
+
     //ad auto sms button goes to reletive layout.xml
-    public void addautosms (View view){
+    public void addautosms(View view) {
         Intent intent = new Intent(this, RelativeLayoutActivity.class);
         startActivity(intent);
 
     }
+
     //polpulates the list
     public void polpulatelist() {
-        DBHandler dbHandler = new DBHandler(this,null,null,1);
-        try{
-            String[][] data = dbHandler.getAllData();
-            TableLayout table = (TableLayout)findViewById(R.id.table);
-            int rownumber = 0;
-            while (data[0].length <rownumber+1){
+        DBHandler dbHandler = new DBHandler(this, null, null, 1);
+        //try{
+        String[][] data = dbHandler.getAllData();
+        TableLayout table = (TableLayout) findViewById(R.id.table);
+        int rownumber = 0;
+        while (data[0].length < rownumber + 1) {
 
-                TableRow row = new TableRow(this);
+            TableRow row = new TableRow(this);
 
-                TextView name = new TextView(this);
-                name.setText(data[rownumber][2]);
+            TextView name = new TextView(this);
+            name.setText(data[rownumber][2]);
 
-                TextView number = new TextView(this);
-                name.setText(data[rownumber][0]);
+            TextView number = new TextView(this);
+            name.setText(data[rownumber][0]);
 
-                TextView message = new TextView(this);
-                number.setText(data[rownumber][1]);
+            TextView message = new TextView(this);
+            number.setText(data[rownumber][1]);
 
-                row.addView(name);
-                row.addView(number);
-                row.addView(message);
+            row.addView(name);
+            row.addView(number);
+            row.addView(message);
 
-                table.addView(row, new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT,TableLayout.LayoutParams.MATCH_PARENT));
-            }
-        }catch (Exception e){}
+            table.addView(row, new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.MATCH_PARENT));
+            /*}
+        }catch (Exception e){
+            //System.out.println(e);
+        }*/
+
+
+        }
 
 
     }
-
-
-    }
-
+}

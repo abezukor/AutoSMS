@@ -14,7 +14,8 @@ public class ShortCutActivity extends android.app.Activity {
         Intent intent = getIntent();
         int id = intent.getIntExtra("id", 0);
         DBHandler dbHandler = new DBHandler(this,null,null,1);
-        String[] parts = dbHandler.getMessageAndNumberFromId(id);
+        String[] parts;
+        parts = dbHandler.getMessageAndNumberFromId(id);
 
         //sets to display
         //see if it will send the sms

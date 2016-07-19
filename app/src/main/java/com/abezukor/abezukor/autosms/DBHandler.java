@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.provider.Settings;
 
 /**
  * Created by abezu on 7/19/2016.
@@ -77,10 +78,12 @@ public class DBHandler extends SQLiteOpenHelper {
         String query = "SELECT * FROM " + TABLE_AUTOSMSTABLE + " WHERE 1";
         Cursor c = db.rawQuery(query, null);
         c.moveToFirst();
-        //get sting 2d arrayi
+
         int rownumber = 0;
         long numRows = DatabaseUtils.queryNumEntries(db, TABLE_AUTOSMSTABLE);
-        String[][] results = new String[(int)numRows][3];
+        System.out.println(numRows);
+        //get sting 2d arrayi
+        String[][] results = new String[((int)numRows+1)][3];
         while (!c.isAfterLast()){
             results[rownumber][0] = c.getString(c.getColumnIndex(COLUMN_HOMESCREENNAME));
             results[rownumber][1] = c.getString(c.getColumnIndex(COLUMN_NUMBER));
@@ -89,16 +92,28 @@ public class DBHandler extends SQLiteOpenHelper {
             rownumber+=1;
         }
         db.close();
+        System.out.println(results);
         return results;
     }
     //gets the message and number from an id
     public String[] getMessageAndNumberFromId(int id){
-        SQLiteDatabase db = getWritableDatabase();
-        String query ="SELECT * FROM " + TABLE_AUTOSMSTABLE + " WHERE " + COLUMN_ID + "=\"" + id + "\";";
-        Cursor c = db.rawQuery(query, null);
+
+        String[] results = {"number", "message"};
+
+        SQLiteDatabase db = getReadableDatabase();
+        String[] columns = {COLUMN_ID, COLUMN_HOMESCREENNAME, COLUMN_NUMBER, COLUMN_MESSAGE};
+        //actually retrives the data
+        Cursor c = db.query(TABLE_AUTOSMSTABLE, columns, "_id=" + (id+1), null, null,null, null);
+        //moves to the first part of the dataset
         c.moveToFirst();
-        String[] results = {Integer.toString(c.getInt(c.getColumnIndex(COLUMN_NUMBER))), c.getString(c.getColumnIndex(COLUMN_MESSAGE))};
-        db.close();
+        //checks i result is null
+        if( c != null && c.moveToFirst()) {
+            results[0] = Integer.toString(c.getInt(c.getColumnIndex(COLUMN_NUMBER)));
+            results[1] = c.getString(c.getColumnIndex(COLUMN_MESSAGE));
+            db.close();
+            System.out.println("if loop runs");
+        }
+
         return results;
     }
 }
