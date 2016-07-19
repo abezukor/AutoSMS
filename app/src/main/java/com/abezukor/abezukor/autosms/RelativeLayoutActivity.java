@@ -64,35 +64,30 @@ public class RelativeLayoutActivity extends android.app.Activity {
         EditText name = (EditText)findViewById(R.id.name);
         if  (message.getText().toString().isEmpty() == false && number.getText().toString().isEmpty() ==false &&  name.getText().toString().isEmpty() ==false) {
             //sets contact to add
-            String contact = number.getText().toString() + " %tosplit%  " + message.getText().toString() + "  %tosplit% " + name.getText().toString();
-            String contactnumberstr = "-1";
-
+            int id=0;
             if (modify == false) {
                 //if you are not modifying a pre written AutoSMS
-                SharedPreferences contacsnumberfile = context.getSharedPreferences("contacnumber", MODE_PRIVATE);
-                int contactnumberint = contacsnumberfile.getInt("ContacsNumber", 0);
-                contactnumberstr = String.valueOf(contactnumberint + 1);
-                Editor edit = contacsnumberfile.edit();
-                //edit.clear();
-                edit.putInt("ContacsNumber", contactnumberint + 1);
-                edit.commit();
-            } else {
+
+                //create the custom object
+                autosmsObject autosms = new autosmsObject();
+                autosms.set_homescreenname(name.getText().toString());
+                autosms.set_message(message.getText().toString());
+                autosms.set_number(Integer.parseInt(number.getText().toString()));
+
+                DBHandler dbHandler = new DBHandler(this,null,null,1);
+                try{
+                    dbHandler.addautosms(autosms);
+                    id = dbHandler.getnumberofrows() -1;
+                }catch (Exception e){}
+            } else {/*
                 //if you are modifying
                 contactnumberstr = String.valueOf(contactnumberint2);
                 Toast.makeText(getApplicationContext(), "Your Shortcut has been Updated.", Toast.LENGTH_LONG).show();
-            }
+            */}
 
-            SharedPreferences userDetails = context.getSharedPreferences("contacs", MODE_PRIVATE);
-            //do the edit
-            SharedPreferences.Editor edit2 = userDetails.edit();
-            edit2.putString(contactnumberstr, contact);
-            System.out.println(contact);
-            edit2.commit();
-            System.out.println(userDetails);
-            int contactnuberint3 = Integer.parseInt(contactnumberstr);
             //checks if its a modifacation so it does not delete shortcut
             if (modify==false) {
-                ShortcutCreatorActivity(contactnuberint3 + 1, name.getText().toString());
+                ShortcutCreatorActivity(id, name.getText().toString());
             }
             //go back to main page
             Intent intent = new Intent(this, ListViewActivity.class);
@@ -104,12 +99,12 @@ public class RelativeLayoutActivity extends android.app.Activity {
         }
         }
         //to create a shortcut
-        protected void  ShortcutCreatorActivity(int contactnumber, String name) {
+        protected void  ShortcutCreatorActivity(int id, String name) {
             //makes intent that is run when the shprtcut is run
             Intent shortcutIntent = new Intent(getApplicationContext(), ShortCutActivity.class);
             shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            shortcutIntent.putExtra("contactnumber", contactnumber);
+            shortcutIntent.putExtra("id", id);
 
             //makes intent to make the shortcut
             Intent addIntent = new Intent();

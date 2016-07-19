@@ -12,15 +12,10 @@ public class ShortCutActivity extends android.app.Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shortcut);
         Intent intent = getIntent();
-        //Toast.makeText(getApplicationContext(), intent.getStringExtra("message") , Toast.LENGTH_LONG).show();
-        Context context = this;
-        SharedPreferences contacsnumberfile = context.getSharedPreferences("contacnumber", MODE_PRIVATE);
-        int contactnumberint = contacsnumberfile.getInt("ContacsNumber", 0);
-        SharedPreferences userDetails = context.getSharedPreferences("contacs", MODE_PRIVATE);
-        String contactnumberstr = String.valueOf(contactnumberint);
-        String contact = userDetails.getString(contactnumberstr, "thisdoesnotwork");
-        //splits it up
-        String[] parts = contact.split(" %tosplit% ");
+        int id = intent.getIntExtra("id", 0);
+        DBHandler dbHandler = new DBHandler(this,null,null,1);
+        String[] parts = dbHandler.getMessageAndNumberFromId(id);
+
         //sets to display
         //see if it will send the sms
         try {
