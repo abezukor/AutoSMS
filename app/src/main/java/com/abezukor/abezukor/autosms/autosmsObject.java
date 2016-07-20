@@ -7,14 +7,14 @@ public class autosmsObject {
     //declares object properties
     private int _id;
     private String _homescreenname;
-    private int _number;
+    private String _number;
     private String _message;
 
     //empty contructor
     public autosmsObject(){}
 
     //full constructor
-    public autosmsObject( String _homescreenname, int _number, String _message) {
+    public autosmsObject( String _homescreenname, String _number, String _message) {
         this._homescreenname = _homescreenname;
         this._number = _number;
         this._message = _message;
@@ -28,7 +28,7 @@ public class autosmsObject {
         return _homescreenname;
     }
 
-    public int get_number() {
+    public String get_number() {
         return _number;
     }
 
@@ -44,7 +44,7 @@ public class autosmsObject {
         this._homescreenname = _homescreenname;
     }
 
-    public void set_number(int _number) {
+    public void set_number(String _number) {
         this._number = _number;
     }
 

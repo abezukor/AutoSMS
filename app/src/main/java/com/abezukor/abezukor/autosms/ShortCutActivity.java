@@ -13,13 +13,17 @@ public class ShortCutActivity extends android.app.Activity {
         setContentView(R.layout.activity_shortcut);
         Intent intent = getIntent();
         int id = intent.getIntExtra("id", 0);
+
+        //System.out.println(id);
+
         DBHandler dbHandler = new DBHandler(this,null,null,1);
         String[] parts;
-        parts = dbHandler.getMessageAndNumberFromId(id);
+        parts = dbHandler.getMessageAndNumberFromId(id+1);
 
         //sets to display
         //see if it will send the sms
         try {
+            System.out.println(parts[0]);
             SmsManager smsManager = SmsManager.getDefault();
             smsManager.sendTextMessage(parts[0], null, parts[1], null, null);
             stop();
