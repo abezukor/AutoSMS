@@ -22,8 +22,7 @@ import java.util.ArrayList;
 public class RelativeLayoutActivity extends android.app.Activity {
     //sets classwide varibels
     boolean buttonpressed = false;
-    Context context = this;
-    int contactnumberint2;
+    int id;
     boolean modify;
     protected void onCreate(Bundle savedInstanceState) {
         //code here runs when the app starts
@@ -36,22 +35,26 @@ public class RelativeLayoutActivity extends android.app.Activity {
         //retrives intent data
         Intent intent = getIntent();
         modify = intent.getBooleanExtra("tomodify", false);
-        contactnumberint2 = intent.getIntExtra("contactnumbe", -1);
+        //gets the id
+        id = intent.getIntExtra("id", -1);
         //this will run if it was from the tapped list
-        if (modify == true){
+        if (modify){
             //sets delete button to visable
             deletebutton.setVisibility(View.VISIBLE);
+
             //gets contact to edit
-            ArrayList<String> data = intent.getStringArrayListExtra("tapeditem");
-            String[] parts = data.toArray(new String[data.size()]);
+            DBHandler dbHandler = new DBHandler(this,null,null,1);
+            String[] parts;
+            parts = dbHandler.getMessageAndNumberFromId(id);
             //sets the text
             EditText number = (EditText)findViewById(R.id.number);
             EditText message = (EditText)findViewById(R.id.message);
             EditText name = (EditText)findViewById(R.id.name);
+            name.setText(parts[2], TextView.BufferType.EDITABLE);
             number.setText(parts[0], TextView.BufferType.EDITABLE);
             message.setText(parts[1], TextView.BufferType.EDITABLE);
-            name.setText(parts[2], TextView.BufferType.EDITABLE);
-            //removeshortcut(parts[2], parts[0], parts[1]); se later for why
+            // disbles the name textbok
+            name.setFocusable(false);
 
         }
     }
@@ -62,10 +65,11 @@ public class RelativeLayoutActivity extends android.app.Activity {
         EditText message = (EditText)findViewById(R.id.message);
         EditText number = (EditText)findViewById(R.id.number);
         EditText name = (EditText)findViewById(R.id.name);
-        if  (message.getText().toString().isEmpty() == false && number.getText().toString().isEmpty() ==false &&  name.getText().toString().isEmpty() ==false) {
+        if  (!message.getText().toString().isEmpty() && !number.getText().toString().isEmpty() &&  !name.getText().toString().isEmpty()) {
             //sets contact to add
-            int id=0;
-            if (modify == false) {
+
+            DBHandler dbHandler = new DBHandler(this,null,null,1);
+            if (!modify) {
                 //if you are not modifying a pre written AutoSMS
 
                 //create the custom object
@@ -74,19 +78,17 @@ public class RelativeLayoutActivity extends android.app.Activity {
                 autosms.set_message(message.getText().toString());
                 autosms.set_number(Integer.parseInt(number.getText().toString()));
 
-                DBHandler dbHandler = new DBHandler(this,null,null,1);
+
                 try{
                     dbHandler.addautosms(autosms);
                     id = dbHandler.getnumberofrows() -1;
                 }catch (Exception e){}
-            } else {/*
-                //if you are modifying
-                contactnumberstr = String.valueOf(contactnumberint2);
-                Toast.makeText(getApplicationContext(), "Your Shortcut has been Updated.", Toast.LENGTH_LONG).show();
-            */}
+            } else {
+                dbHandler.modifyautosmssms(id,number.getText().toString(),message.getText().toString());
+            }
 
             //checks if its a modifacation so it does not delete shortcut
-            if (modify==false) {
+            if (!modify) {
                 ShortcutCreatorActivity(id, name.getText().toString());
             }
             //go back to main page
@@ -156,26 +158,10 @@ public class RelativeLayoutActivity extends android.app.Activity {
     public void deletebtn(View view){
         //when delete button is tapped
         Toast.makeText(getApplicationContext(), "Please remove old Shortcut from home screen. AutoSMS will no longer remember it.", Toast.LENGTH_LONG).show();
-        //gets the saved file
-        SharedPreferences contacsnumberfile = context.getSharedPreferences("contacnumber", MODE_PRIVATE);
-        int contactnumberint = contacsnumberfile.getInt("ContacsNumber", 0);
-        SharedPreferences userDetails = context.getSharedPreferences("contacs", MODE_PRIVATE);
 
-        Editor edit2 = userDetails.edit();
-        //moves all items after the deketed one one back
-        for (int i = contactnumberint2; i< contactnumberint; i++){
-            String contactnumberstr = String.valueOf(i+1);
-            String contacttoreplacenumberstr = String.valueOf(i-1);
-            String contact = userDetails.getString(contactnumberstr, "thisdoesnotwork");
-            edit2.putString(contacttoreplacenumberstr, contact);
-        }
-        edit2.commit();
-        //sets contactnumber int
-        int contactnumberstr4 = contactnumberint - 1;
-        Editor edit = contacsnumberfile.edit();
-        edit.putInt("ContacsNumber", contactnumberstr4);
-        edit.commit();
-
+        //actually deletes the thing
+        DBHandler dbHandler = new DBHandler(this,null,null,1);
+        dbHandler.delete(id);
         //goes to main page
         Intent intent = new Intent(this, ListViewActivity.class);
         intent.putExtra("button pressed", buttonpressed);

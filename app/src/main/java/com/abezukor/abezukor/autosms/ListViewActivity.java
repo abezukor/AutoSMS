@@ -4,6 +4,7 @@ import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,7 +15,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 
-public class ListViewActivity extends android.app.Activity {
+public class ListViewActivity extends android.app.Activity implements View.OnClickListener {
     //sets class wide varybles
     boolean fromshortcut = false;
 
@@ -83,24 +84,39 @@ public class ListViewActivity extends android.app.Activity {
         String[][] data = dbHandler.getAllData();
         TableLayout table = (TableLayout) findViewById(R.id.table);
         int rownumber = 0;
-        while (data[0].length < rownumber + 1) {
+        while ( rownumber <dbHandler.getnumberofrows()+1) {
 
+            //System.out.println(rownumber + "rownumber");
+            //makes the table row
             TableRow row = new TableRow(this);
-
+            //makes the extboxes
             TextView name = new TextView(this);
-            name.setText(data[rownumber][2]);
+            name.setText(data[rownumber][0]);
+            name.setGravity(Gravity.CENTER_HORIZONTAL);
+            name.setTextSize(20);
 
             TextView number = new TextView(this);
-            name.setText(data[rownumber][0]);
+            number.setText(data[rownumber][1]);
+            number.setGravity(Gravity.CENTER_HORIZONTAL);
+            number.setTextSize(20);
+
 
             TextView message = new TextView(this);
-            number.setText(data[rownumber][1]);
+            message.setText(data[rownumber][2]);
+            message.setGravity(Gravity.CENTER_HORIZONTAL);
+            message.setTextSize(20);
+            message.setSingleLine(false);
 
+            //adds properties to the rows
             row.addView(name);
             row.addView(number);
             row.addView(message);
+            row.setId(rownumber);
+            row.setOnClickListener(this);
+
 
             table.addView(row, new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.MATCH_PARENT));
+            rownumber++;
             /*}
         }catch (Exception e){
             //System.out.println(e);
@@ -110,5 +126,14 @@ public class ListViewActivity extends android.app.Activity {
         }
 
 
+    }
+
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        Intent intent = new Intent(this, RelativeLayoutActivity.class);
+        intent.putExtra("id",id);
+        intent.putExtra("tomodify", true);
+        startActivity(intent);
     }
 }

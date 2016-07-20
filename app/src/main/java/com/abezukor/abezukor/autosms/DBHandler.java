@@ -58,11 +58,24 @@ public class DBHandler extends SQLiteOpenHelper {
         db.insert(TABLE_AUTOSMSTABLE, null, values);
         db.close();
     }
+    public void modifyautosmssms (int id, String number, String message){
+        //sets up the list
+        ContentValues values = new ContentValues();
+
+        //adds values to the list
+        values.put(COLUMN_NUMBER, number);
+        values.put(COLUMN_MESSAGE, message);
+
+        //gets the databse and adds row
+        SQLiteDatabase db = getWritableDatabase();
+        db.update(TABLE_AUTOSMSTABLE,values, "_id=" + (id+1),null);
+        db.close();
+    }
 
     //delete autosms
     public void delete (int id){
         SQLiteDatabase db = getWritableDatabase();
-        db.execSQL("DELETE FROM " + TABLE_AUTOSMSTABLE + "WHERE " + COLUMN_ID + "=\"" + id + "\";");
+        db.execSQL("DELETE FROM " + TABLE_AUTOSMSTABLE + " WHERE " + COLUMN_ID + "=\"" + (id+1) + "\";");
         db.close();
     }
     //gets the total number of rows in the database
@@ -75,16 +88,24 @@ public class DBHandler extends SQLiteOpenHelper {
         //gets the database
         SQLiteDatabase db = getWritableDatabase();
         //sets up query
-        String query = "SELECT * FROM " + TABLE_AUTOSMSTABLE + " WHERE 1";
+        String query = "SELECT "+COLUMN_HOMESCREENNAME+"," + COLUMN_NUMBER+"," + COLUMN_MESSAGE +  " FROM " + TABLE_AUTOSMSTABLE + " WHERE 1";
         Cursor c = db.rawQuery(query, null);
+        //String[] columns = {COLUMN_ID, COLUMN_HOMESCREENNAME, COLUMN_NUMBER, COLUMN_MESSAGE};
+        //Cursor c = db.query(TABLE_AUTOSMSTABLE, columns,null,null,null,null,null);
         c.moveToFirst();
 
         int rownumber = 0;
         long numRows = DatabaseUtils.queryNumEntries(db, TABLE_AUTOSMSTABLE);
+
         System.out.println(numRows);
+        System.out.println(c);
+
         //get sting 2d arrayi
         String[][] results = new String[((int)numRows+1)][3];
         while (!c.isAfterLast()){
+
+            System.out.println(c);
+
             results[rownumber][0] = c.getString(c.getColumnIndex(COLUMN_HOMESCREENNAME));
             results[rownumber][1] = c.getString(c.getColumnIndex(COLUMN_NUMBER));
             results[rownumber][2] = c.getString(c.getColumnIndex(COLUMN_MESSAGE));
@@ -98,7 +119,7 @@ public class DBHandler extends SQLiteOpenHelper {
     //gets the message and number from an id
     public String[] getMessageAndNumberFromId(int id){
 
-        String[] results = {"number", "message"};
+        String[] results = {"number", "message", "name"};
 
         SQLiteDatabase db = getReadableDatabase();
         String[] columns = {COLUMN_ID, COLUMN_HOMESCREENNAME, COLUMN_NUMBER, COLUMN_MESSAGE};
@@ -110,6 +131,7 @@ public class DBHandler extends SQLiteOpenHelper {
         if( c != null && c.moveToFirst()) {
             results[0] = Integer.toString(c.getInt(c.getColumnIndex(COLUMN_NUMBER)));
             results[1] = c.getString(c.getColumnIndex(COLUMN_MESSAGE));
+            results[2] = c.getString(c.getColumnIndex(COLUMN_HOMESCREENNAME));
             db.close();
             System.out.println("if loop runs");
         }
