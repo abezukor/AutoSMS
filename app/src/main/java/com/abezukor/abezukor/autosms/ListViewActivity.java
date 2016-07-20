@@ -3,38 +3,35 @@ package com.abezukor.abezukor.autosms;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
+import android.widget.TableLayout;
+import android.widget.TableRow;
+import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 
 
-public class ListViewActivity extends ListActivity {
+public class ListViewActivity extends android.app.Activity implements View.OnClickListener {
     //sets class wide varybles
     boolean fromshortcut = false;
-    Context context = this;
-    ArrayList<String> arrayList = new ArrayList<String>();
-    String a2;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         //sets activity GUI
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_list_view);
+        setContentView(R.layout.activity_table_view);
         //gets the intent
         Intent intent = getIntent();
         //fromsave = intent.getBooleanExtra("button pressed", false);
         //sees if it was from shortcut i9f so close it
         fromshortcut = intent.getBooleanExtra("fromonebutton", false);
 
-        if (fromshortcut == true) {
+        if (fromshortcut) {
             finish();
             System.exit(0);
         }
@@ -44,8 +41,6 @@ public class ListViewActivity extends ListActivity {
         //arrayList.add("Object 2");
         //arrayList.add("Object 3");
         //ads poppulated list to the GUI
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.row_layout, arrayList);
-        setListAdapter(adapter);
     }
 
     @Override
@@ -74,88 +69,71 @@ public class ListViewActivity extends ListActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
     //ad auto sms button goes to reletive layout.xml
-    public void addautosms (View view){
+    public void addautosms(View view) {
         Intent intent = new Intent(this, RelativeLayoutActivity.class);
         startActivity(intent);
 
     }
+
     //polpulates the list
     public void polpulatelist() {
-        //gets the files
-        SharedPreferences contacsnumberfile = context.getSharedPreferences("contacnumber", MODE_PRIVATE);
-        int contactnumberint = contacsnumberfile.getInt("ContacsNumber", 0);
-        SharedPreferences userDetails = context.getSharedPreferences("contacs", MODE_PRIVATE);
+        DBHandler dbHandler = new DBHandler(this, null, null, 1);
+        //try{
+        String[][] data = dbHandler.getAllData();
+        TableLayout table = (TableLayout) findViewById(R.id.table);
+        int rownumber = 0;
+        while ( rownumber <dbHandler.getnumberofrows()+1) {
 
-        for (int i = 0; i< contactnumberint; i++){
-            String contactnumberstr = String.valueOf(i + 1);
-            //gtes value for key i+1
-            String contact = userDetails.getString(contactnumberstr, "thisdoesnotwork");
-            System.out.println(contact);
-            //splits it up
-            String[] parts = contact.split(" %tosplit% ");
-            //sets to display
-            String contacttodisplay = parts[0] + parts[1];
-            arrayList.add(contacttodisplay);
+            //System.out.println(rownumber + "rownumber");
+            //makes the table row
+            TableRow row = new TableRow(this);
+            //makes the extboxes
+            TextView name = new TextView(this);
+            name.setText(data[rownumber][0]);
+            name.setGravity(Gravity.CENTER_HORIZONTAL);
+            name.setTextSize(20);
+
+            TextView number = new TextView(this);
+            number.setText(data[rownumber][1]);
+            number.setGravity(Gravity.CENTER_HORIZONTAL);
+            number.setTextSize(20);
+
+
+            TextView message = new TextView(this);
+            message.setText(data[rownumber][2]);
+            message.setGravity(Gravity.CENTER_HORIZONTAL);
+            message.setTextSize(20);
+            message.setSingleLine(false);
+
+            //adds properties to the rows
+            row.addView(name);
+            row.addView(number);
+            row.addView(message);
+            row.setId(rownumber);
+            row.setOnClickListener(this);
+
+
+            table.addView(row, new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.MATCH_PARENT));
+            rownumber++;
+            /*}
+        }catch (Exception e){
+            //System.out.println(e);
+        }*/
+
+
         }
-    }
-    protected void onListItemClick(ListView listView, View view, int position, long id) {
-        super.onListItemClick(listView, view, position, id);
-        //gets the listview items
-        a2 = arrayList.get(position);
-        //gets the files
-        SharedPreferences contacsnumberfile = context.getSharedPreferences("contacnumber", MODE_PRIVATE);
-        int contactnumberint = contacsnumberfile.getInt("ContacsNumber", 0);
-        SharedPreferences userDetails = context.getSharedPreferences("contacs", MODE_PRIVATE);
 
-        int i = 0;
-        boolean looprun = true;
-        //makes arraylist
-        ArrayList<String> tosend = new ArrayList<String>();
-        //i need the next line so i dont get qa syntax error however its not nessary code wise
-        String tosendarray[] = {"12", "34", "56"};
-        //setting the contactnumber to send
-        int contactnumberint2 = 0;
-        //runes through list untill finds contact and list item that mach
-        while (i<contactnumberint && looprun == true){
-            String contactnumberstr = String.valueOf(i + 1);
-            String contact = userDetails.getString(contactnumberstr, "thisdoesnotwork");
-            //re splits it up
-            String[] parts = contact.split(" %tosplit% ");
-            String contacttodisplay = parts[0] + parts[1];
-            i++;
 
-            if (a2.equals(contacttodisplay)){
-                //creats array to send
-                tosendarray = new String[3];
-                //stops loop from running
-                looprun = false;
-                //again getting syntax error without this
-                tosendarray[0] = parts[0];
-                tosendarray[1] = parts[1];
-                tosendarray[2] = parts[2];
-                contactnumberint2 = i;
-                //System.out.println("is this running");
-        }
     }
-        //goes to relitivelayout.class
+
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
         Intent intent = new Intent(this, RelativeLayoutActivity.class);
-        //tells relitivelayout that this is a modify
+        intent.putExtra("id",id);
         intent.putExtra("tomodify", true);
-
-        //converts array to arraylist
-        Collection l = Arrays.asList(tosendarray);
-        tosend.addAll(l);
-        //puts the contact extra
-        intent.putStringArrayListExtra("tapeditem", tosend);
-        //and the contact number
-        intent.getIntExtra("contactnumber", contactnumberint2);
-        //and finnaly runs it
         startActivity(intent);
-
-
     }
-
-
-    }
-
+}
