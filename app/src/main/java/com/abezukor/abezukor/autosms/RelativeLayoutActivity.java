@@ -76,7 +76,7 @@ public class RelativeLayoutActivity extends android.app.Activity {
                 autosmsObject autosms = new autosmsObject();
                 autosms.set_homescreenname(name.getText().toString());
                 autosms.set_message(message.getText().toString());
-                autosms.set_number(Integer.parseInt(number.getText().toString()));
+                autosms.set_number(number.getText().toString());
 
 
                 try{
