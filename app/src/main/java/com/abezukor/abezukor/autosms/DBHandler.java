@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.provider.Settings;
 
 /**
  * Created by abezu on 7/19/2016.
@@ -44,7 +43,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
     }
     //add new row / automs message
-    public void addautosms (autosmsObject autosmsObject){
+    public void addautosms (autoSMSObject autosmsObject){
         //sets up the list
         ContentValues values = new ContentValues();
 
@@ -84,11 +83,11 @@ public class DBHandler extends SQLiteOpenHelper {
         return ((int)DatabaseUtils.queryNumEntries(db, TABLE_AUTOSMSTABLE));
     }
     //returns all data
-    public String[][] getAllData(){
+    public autoSMSObject[] getAllData(){
         //gets the database
         SQLiteDatabase db = getWritableDatabase();
         //sets up query
-        String query = "SELECT "+COLUMN_HOMESCREENNAME+"," + COLUMN_NUMBER+"," + COLUMN_MESSAGE +  " FROM " + TABLE_AUTOSMSTABLE + " WHERE 1";
+        String query = "SELECT "+COLUMN_ID+","+ COLUMN_HOMESCREENNAME+"," + COLUMN_NUMBER+"," + COLUMN_MESSAGE +  " FROM " + TABLE_AUTOSMSTABLE + " WHERE 1";
         Cursor c = db.rawQuery(query, null);
         //String[] columns = {COLUMN_ID, COLUMN_HOMESCREENNAME, COLUMN_NUMBER, COLUMN_MESSAGE};
         //Cursor c = db.query(TABLE_AUTOSMSTABLE, columns,null,null,null,null,null);
@@ -101,14 +100,19 @@ public class DBHandler extends SQLiteOpenHelper {
         System.out.println(c);
 
         //get sting 2d arrayi
-        String[][] results = new String[((int)numRows+1)][3];
+        autoSMSObject[] results = new autoSMSObject[(int)numRows+1];
+
         while (!c.isAfterLast()){
+            autoSMSObject row = new autoSMSObject();
 
             System.out.println(c);
 
-            results[rownumber][0] = c.getString(c.getColumnIndex(COLUMN_HOMESCREENNAME));
-            results[rownumber][1] = c.getString(c.getColumnIndex(COLUMN_NUMBER));
-            results[rownumber][2] = c.getString(c.getColumnIndex(COLUMN_MESSAGE));
+            row.set_id(c.getColumnIndex(COLUMN_ID));
+            row.set_homescreenname(c.getString(c.getColumnIndex(COLUMN_HOMESCREENNAME)));
+            row.set_message(c.getString(c.getColumnIndex(COLUMN_MESSAGE)));
+            row.set_number(c.getString(c.getColumnIndex(COLUMN_NUMBER)));
+
+            results[rownumber] = row;
             c.moveToNext();
             rownumber+=1;
         }
