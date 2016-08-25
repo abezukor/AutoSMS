@@ -1,18 +1,13 @@
 package com.abezukor.abezukor.autosms;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.content.SharedPreferences.Editor;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.util.ArrayList;
 
 
 /**
@@ -73,7 +68,7 @@ public class RelativeLayoutActivity extends android.app.Activity {
                 //if you are not modifying a pre written AutoSMS
 
                 //create the custom object
-                autosmsObject autosms = new autosmsObject();
+                autoSMSObject autosms = new autoSMSObject();
                 autosms.set_homescreenname(name.getText().toString());
                 autosms.set_message(message.getText().toString());
                 autosms.set_number(number.getText().toString());

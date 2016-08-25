@@ -3,7 +3,7 @@ package com.abezukor.abezukor.autosms;
 /**
  * Created by abezu on 7/19/2016.
  */
-public class autosmsObject {
+public class autoSMSObject {
     //declares object properties
     private int _id;
     private String _homescreenname;
@@ -11,10 +11,10 @@ public class autosmsObject {
     private String _message;
 
     //empty contructor
-    public autosmsObject(){}
+    public autoSMSObject(){}
 
     //full constructor
-    public autosmsObject( String _homescreenname, String _number, String _message) {
+    public autoSMSObject(String _homescreenname, String _number, String _message) {
         this._homescreenname = _homescreenname;
         this._number = _number;
         this._message = _message;
