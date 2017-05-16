@@ -6,13 +6,14 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.provider.Settings;
 
 /**
  * Created by abezu on 7/19/2016.
  */
 public class DBHandler extends SQLiteOpenHelper {
     //sets all the basic values
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
     private static final String DATABASE_NAME = "autosms.db";
     private static final String TABLE_AUTOSMSTABLE = "autosmstable";
     private static final String COLUMN_ID = "_id";
@@ -29,8 +30,8 @@ public class DBHandler extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         String createquery = "CREATE TABLE " + TABLE_AUTOSMSTABLE + "(" +
-                COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT ," +
-                COLUMN_HOMESCREENNAME + " TEXT ," + COLUMN_NUMBER + " INTEGER ," + COLUMN_MESSAGE + " TEXT " +
+                COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                COLUMN_HOMESCREENNAME + " TEXT ," + COLUMN_NUMBER + " BIGINT ," + COLUMN_MESSAGE + " TEXT " +
                 ");";
         db.execSQL(createquery);
     }
@@ -67,14 +68,17 @@ public class DBHandler extends SQLiteOpenHelper {
 
         //gets the databse and adds row
         SQLiteDatabase db = getWritableDatabase();
-        db.update(TABLE_AUTOSMSTABLE,values, "_id=" + (id+1),null);
+        db.update(TABLE_AUTOSMSTABLE,values, "_id=" + (id-1),null);
         db.close();
     }
 
     //delete autosms
     public void delete (int id){
+        System.out.println("DB Handler delete Id is " + id);
         SQLiteDatabase db = getWritableDatabase();
-        db.execSQL("DELETE FROM " + TABLE_AUTOSMSTABLE + " WHERE " + COLUMN_ID + "=\"" + (id+1) + "\";");
+        //int deleted = db.delete(TABLE_AUTOSMSTABLE, COLUMN_ID +  "=" + (String.valueOf(id)), null);
+        //System.out.println("Deleted = " + deleted);
+        db.execSQL("DELETE FROM " + TABLE_AUTOSMSTABLE + " WHERE " + COLUMN_ID + "=\"" + (id) + "\";");
         db.close();
     }
     //gets the total number of rows in the database
@@ -96,8 +100,8 @@ public class DBHandler extends SQLiteOpenHelper {
         int rownumber = 0;
         long numRows = DatabaseUtils.queryNumEntries(db, TABLE_AUTOSMSTABLE);
 
-        System.out.println(numRows);
-        System.out.println(c);
+        System.out.println("Number of Rows = " + numRows);
+        System.out.println("Cursor is: " + c);
 
         //get sting 2d arrayi
         autoSMSObject[] results = new autoSMSObject[(int)numRows+1];
@@ -105,30 +109,32 @@ public class DBHandler extends SQLiteOpenHelper {
         while (!c.isAfterLast()){
             autoSMSObject row = new autoSMSObject();
 
-            System.out.println(c);
+            System.out.println("Cursor is: " + c);
+            System.out.println("getAll id is " + c.getInt(c.getColumnIndex(COLUMN_ID)));
 
-            row.set_id(c.getColumnIndex(COLUMN_ID));
+            row.set_id(c.getInt(c.getColumnIndex(COLUMN_ID)));
             row.set_homescreenname(c.getString(c.getColumnIndex(COLUMN_HOMESCREENNAME)));
             row.set_message(c.getString(c.getColumnIndex(COLUMN_MESSAGE)));
             row.set_number(c.getString(c.getColumnIndex(COLUMN_NUMBER)));
 
             results[rownumber] = row;
             c.moveToNext();
-            rownumber+=1;
+            rownumber++;
         }
         db.close();
-        System.out.println(results);
+        System.out.println("Results array  is " + results);
         return results;
     }
     //gets the message and number from an id
     public String[] getMessageAndNumberFromId(int id){
 
-        String[] results = {"number", "message", "name"};
+        System.out.println("Get single id is " + (id-1));
+        String[] results = {"defaultnumber", "defaultmessage", "defaultname"};
 
         SQLiteDatabase db = getReadableDatabase();
         String[] columns = {COLUMN_ID, COLUMN_HOMESCREENNAME, COLUMN_NUMBER, COLUMN_MESSAGE};
         //actually retrives the data
-        Cursor c = db.query(TABLE_AUTOSMSTABLE, columns, "_id=" + (id+1), null, null,null, null);
+        Cursor c = db.query(TABLE_AUTOSMSTABLE, columns, "_id=" + (id-1), null, null,null, null);
         //moves to the first part of the dataset
         c.moveToFirst();
         //checks i result is null
@@ -137,7 +143,7 @@ public class DBHandler extends SQLiteOpenHelper {
             results[1] = c.getString(c.getColumnIndex(COLUMN_MESSAGE));
             results[2] = c.getString(c.getColumnIndex(COLUMN_HOMESCREENNAME));
             db.close();
-            System.out.println("if loop runs");
+            System.out.println("Data base returns Values");
         }
 
         return results;

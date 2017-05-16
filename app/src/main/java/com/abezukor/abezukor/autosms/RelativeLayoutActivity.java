@@ -72,6 +72,7 @@ public class RelativeLayoutActivity extends android.app.Activity {
                 autosms.set_homescreenname(name.getText().toString());
                 autosms.set_message(message.getText().toString());
                 autosms.set_number(number.getText().toString());
+                autosms.set_id(dbHandler.getnumberofrows());
 
 
                 try{
@@ -155,8 +156,10 @@ public class RelativeLayoutActivity extends android.app.Activity {
         Toast.makeText(getApplicationContext(), "Please remove old Shortcut from home screen. AutoSMS will no longer remember it.", Toast.LENGTH_LONG).show();
 
         //actually deletes the thing
+        System.out.println("Id is " + id);
+
         DBHandler dbHandler = new DBHandler(this,null,null,1);
-        dbHandler.delete(id);
+        dbHandler.delete(id-1);
         //goes to main page
         Intent intent = new Intent(this, ListViewActivity.class);
         intent.putExtra("button pressed", buttonpressed);

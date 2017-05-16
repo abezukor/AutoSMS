@@ -80,7 +80,7 @@ public class ListViewActivity extends android.app.Activity implements View.OnCli
         autoSMSObject[] data = dbHandler.getAllData();
         TableLayout table = (TableLayout) findViewById(R.id.table);
         int rownumber = 0;
-        while ( rownumber <dbHandler.getnumberofrows()+1) {
+        while ( rownumber <dbHandler.getnumberofrows()) {
 
             //System.out.println(rownumber + "rownumber");
             //makes the table row
@@ -107,7 +107,7 @@ public class ListViewActivity extends android.app.Activity implements View.OnCli
             row.addView(name);
             row.addView(number);
             row.addView(message);
-            row.setId(data[rownumber].get_id());
+            row.setId(data[rownumber].get_id()+1);
             row.setOnClickListener(this);
 
 
