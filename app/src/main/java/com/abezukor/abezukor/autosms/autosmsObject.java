@@ -14,10 +14,13 @@ public class autoSMSObject {
     public autoSMSObject(){}
 
     //full constructor
-    public autoSMSObject(String _homescreenname, String _number, String _message) {
+    public autoSMSObject(String _homescreenname, String _number, String _message, int id) {
         this._homescreenname = _homescreenname;
         this._number = _number;
         this._message = _message;
+        this._id = id;
+
+        //System.out.println("AutoSMS Object id: " + this._id);
     }
     //setters and getters
     public int get_id() {

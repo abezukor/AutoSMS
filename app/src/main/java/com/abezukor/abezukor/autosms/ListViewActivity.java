@@ -14,6 +14,7 @@ import android.widget.TextView;
 public class ListViewActivity extends android.app.Activity implements View.OnClickListener {
     //sets class wide varybles
     boolean fromshortcut = false;
+    int lastID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +69,10 @@ public class ListViewActivity extends android.app.Activity implements View.OnCli
 
     //ad auto sms button goes to reletive layout.xml
     public void addautosms(View view) {
+        DBHandler dbHandler = new DBHandler(this, null, null, 1);
         Intent intent = new Intent(this, RelativeLayoutActivity.class);
+        //intent.putExtra("id", dbHandler.getNextID());
+        //System.out.println("ListView New ID should" + dbHandler.getNextID());
         startActivity(intent);
 
     }
@@ -104,10 +108,12 @@ public class ListViewActivity extends android.app.Activity implements View.OnCli
             message.setSingleLine(false);
 
             //adds properties to the rows
+            //System.out.println("List ID is: " + data[rownumber].get_id());
+
             row.addView(name);
             row.addView(number);
             row.addView(message);
-            row.setId(data[rownumber].get_id()+1);
+            row.setId(data[rownumber].get_id());
             row.setOnClickListener(this);
 
 
@@ -120,7 +126,7 @@ public class ListViewActivity extends android.app.Activity implements View.OnCli
 
 
         }
-
+        lastID = rownumber+1;
 
     }
 

@@ -3,6 +3,7 @@ package com.abezukor.abezukor.autosms;
 import android.content.Intent;
 import android.os.Bundle;
 
+import android.telephony.PhoneNumberUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -17,7 +18,7 @@ import android.widget.Toast;
 public class RelativeLayoutActivity extends android.app.Activity {
     //sets classwide varibels
     boolean buttonpressed = false;
-    int id;
+    private int id;
     boolean modify;
     protected void onCreate(Bundle savedInstanceState) {
         //code here runs when the app starts
@@ -32,6 +33,7 @@ public class RelativeLayoutActivity extends android.app.Activity {
         modify = intent.getBooleanExtra("tomodify", false);
         //gets the id
         id = intent.getIntExtra("id", -1);
+        //System.out.println("Rel Layout id " + id);
         //this will run if it was from the tapped list
         if (modify){
             //sets delete button to visable
@@ -41,8 +43,11 @@ public class RelativeLayoutActivity extends android.app.Activity {
             DBHandler dbHandler = new DBHandler(this,null,null,1);
             String[] parts;
             parts = dbHandler.getMessageAndNumberFromId(id);
+
             //sets the text
             EditText number = (EditText)findViewById(R.id.number);
+            PhoneNumberUtils.formatNumber(number.getText().toString());
+
             EditText message = (EditText)findViewById(R.id.message);
             EditText name = (EditText)findViewById(R.id.name);
             name.setText(parts[2], TextView.BufferType.EDITABLE);
@@ -68,16 +73,10 @@ public class RelativeLayoutActivity extends android.app.Activity {
                 //if you are not modifying a pre written AutoSMS
 
                 //create the custom object
-                autoSMSObject autosms = new autoSMSObject();
-                autosms.set_homescreenname(name.getText().toString());
-                autosms.set_message(message.getText().toString());
-                autosms.set_number(number.getText().toString());
-                autosms.set_id(dbHandler.getnumberofrows());
-
+                autoSMSObject autosms = new autoSMSObject(name.getText().toString(), number.getText().toString(), message.getText().toString(), id );
 
                 try{
-                    dbHandler.addautosms(autosms);
-                    id = dbHandler.getnumberofrows() -1;
+                   id =  dbHandler.addautosms(autosms);
                 }catch (Exception e){}
             } else {
                 dbHandler.modifyautosmssms(id,number.getText().toString(),message.getText().toString());
@@ -85,7 +84,7 @@ public class RelativeLayoutActivity extends android.app.Activity {
 
             //checks if its a modifacation so it does not delete shortcut
             if (!modify) {
-                ShortcutCreatorActivity(id, name.getText().toString());
+                ShortcutCreatorActivity(name.getText().toString());
             }
             //go back to main page
             Intent intent = new Intent(this, ListViewActivity.class);
@@ -97,7 +96,9 @@ public class RelativeLayoutActivity extends android.app.Activity {
         }
         }
         //to create a shortcut
-        protected void  ShortcutCreatorActivity(int id, String name) {
+        protected void  ShortcutCreatorActivity(String name) {
+            //System.out.println("ShortcutCreator Id is " + id);
+
             //makes intent that is run when the shprtcut is run
             Intent shortcutIntent = new Intent(getApplicationContext(), ShortCutActivity.class);
             shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -156,10 +157,10 @@ public class RelativeLayoutActivity extends android.app.Activity {
         Toast.makeText(getApplicationContext(), "Please remove old Shortcut from home screen. AutoSMS will no longer remember it.", Toast.LENGTH_LONG).show();
 
         //actually deletes the thing
-        System.out.println("Id is " + id);
+        //System.out.println("Id is " + id);
 
         DBHandler dbHandler = new DBHandler(this,null,null,1);
-        dbHandler.delete(id-1);
+        dbHandler.delete(id);
         //goes to main page
         Intent intent = new Intent(this, ListViewActivity.class);
         intent.putExtra("button pressed", buttonpressed);

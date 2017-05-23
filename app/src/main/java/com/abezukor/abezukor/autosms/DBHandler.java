@@ -13,7 +13,7 @@ import android.provider.Settings;
  */
 public class DBHandler extends SQLiteOpenHelper {
     //sets all the basic values
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 4;
     private static final String DATABASE_NAME = "autosms.db";
     private static final String TABLE_AUTOSMSTABLE = "autosmstable";
     private static final String COLUMN_ID = "_id";
@@ -44,7 +44,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
     }
     //add new row / automs message
-    public void addautosms (autoSMSObject autosmsObject){
+    public int addautosms (autoSMSObject autosmsObject){
         //sets up the list
         ContentValues values = new ContentValues();
 
@@ -55,8 +55,9 @@ public class DBHandler extends SQLiteOpenHelper {
 
         //gets the databse and adds row
         SQLiteDatabase db = getWritableDatabase();
-        db.insert(TABLE_AUTOSMSTABLE, null, values);
+        int toReturn = (int) db.insert(TABLE_AUTOSMSTABLE, null, values);
         db.close();
+        return(toReturn);
     }
     public void modifyautosmssms (int id, String number, String message){
         //sets up the list
@@ -68,13 +69,13 @@ public class DBHandler extends SQLiteOpenHelper {
 
         //gets the databse and adds row
         SQLiteDatabase db = getWritableDatabase();
-        db.update(TABLE_AUTOSMSTABLE,values, "_id=" + (id-1),null);
+        db.update(TABLE_AUTOSMSTABLE,values, "_id=" + (id),null);
         db.close();
     }
 
     //delete autosms
     public void delete (int id){
-        System.out.println("DB Handler delete Id is " + id);
+        //System.out.println("DB Handler delete Id is " + id);
         SQLiteDatabase db = getWritableDatabase();
         //int deleted = db.delete(TABLE_AUTOSMSTABLE, COLUMN_ID +  "=" + (String.valueOf(id)), null);
         //System.out.println("Deleted = " + deleted);
@@ -86,6 +87,21 @@ public class DBHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = getWritableDatabase();
         return ((int)DatabaseUtils.queryNumEntries(db, TABLE_AUTOSMSTABLE));
     }
+    //Not used anymore
+    /*public int getNextID(){
+        try {
+            SQLiteDatabase db = getWritableDatabase();
+            String query = "SELECT LAST_INSERT_ID()";
+            Cursor c = db.rawQuery(query, null);
+            c.moveToLast();
+
+            //System.out.println("DB Handeler New ID should be " + (c.getInt(c.getColumnIndex(COLUMN_ID)) + 1));
+
+            return ((c.getInt(c.getColumnIndex(COLUMN_ID)) + 1));
+        }catch (Exception e){
+            return 1;
+        }
+    }*/
     //returns all data
     public autoSMSObject[] getAllData(){
         //gets the database
@@ -100,41 +116,38 @@ public class DBHandler extends SQLiteOpenHelper {
         int rownumber = 0;
         long numRows = DatabaseUtils.queryNumEntries(db, TABLE_AUTOSMSTABLE);
 
-        System.out.println("Number of Rows = " + numRows);
-        System.out.println("Cursor is: " + c);
+        //System.out.println("Number of Rows = " + numRows);
+        //System.out.println("Cursor is: " + c);
 
         //get sting 2d arrayi
         autoSMSObject[] results = new autoSMSObject[(int)numRows+1];
 
         while (!c.isAfterLast()){
-            autoSMSObject row = new autoSMSObject();
+            autoSMSObject row = new autoSMSObject(c.getString(c.getColumnIndex(COLUMN_HOMESCREENNAME)), c.getString(c.getColumnIndex(COLUMN_NUMBER)),
+                    c.getString(c.getColumnIndex(COLUMN_MESSAGE)), c.getInt(c.getColumnIndex(COLUMN_ID)));
 
-            System.out.println("Cursor is: " + c);
-            System.out.println("getAll id is " + c.getInt(c.getColumnIndex(COLUMN_ID)));
-
-            row.set_id(c.getInt(c.getColumnIndex(COLUMN_ID)));
-            row.set_homescreenname(c.getString(c.getColumnIndex(COLUMN_HOMESCREENNAME)));
-            row.set_message(c.getString(c.getColumnIndex(COLUMN_MESSAGE)));
-            row.set_number(c.getString(c.getColumnIndex(COLUMN_NUMBER)));
+            //System.out.println("Cursor is: " + c);
+            //System.out.println("getAll id is " + c.getInt(c.getColumnIndex(COLUMN_ID)));
 
             results[rownumber] = row;
             c.moveToNext();
             rownumber++;
         }
         db.close();
-        System.out.println("Results array  is " + results);
+        //System.out.println("Results array  is " + results);
         return results;
     }
     //gets the message and number from an id
     public String[] getMessageAndNumberFromId(int id){
 
-        System.out.println("Get single id is " + (id-1));
+        //System.out.println("Get single id is " + (id));
+
         String[] results = {"defaultnumber", "defaultmessage", "defaultname"};
 
         SQLiteDatabase db = getReadableDatabase();
         String[] columns = {COLUMN_ID, COLUMN_HOMESCREENNAME, COLUMN_NUMBER, COLUMN_MESSAGE};
         //actually retrives the data
-        Cursor c = db.query(TABLE_AUTOSMSTABLE, columns, "_id=" + (id-1), null, null,null, null);
+        Cursor c = db.query(TABLE_AUTOSMSTABLE, columns, "_id=" + (id), null, null,null, null);
         //moves to the first part of the dataset
         c.moveToFirst();
         //checks i result is null
@@ -143,7 +156,7 @@ public class DBHandler extends SQLiteOpenHelper {
             results[1] = c.getString(c.getColumnIndex(COLUMN_MESSAGE));
             results[2] = c.getString(c.getColumnIndex(COLUMN_HOMESCREENNAME));
             db.close();
-            System.out.println("Data base returns Values");
+            //System.out.println("Data base returns Values");
         }
 
         return results;
