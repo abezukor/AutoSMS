@@ -8,8 +8,8 @@ android {
         applicationId "com.abezukor.abezukor.autosms"
         minSdkVersion 14
         targetSdkVersion 21
-        versionCode 3
-        versionName "1.0.0"
+        versionCode 4
+        versionName "2.1.0"
     }
     buildTypes {
         release {
