@@ -1,8 +1,11 @@
 package com.abezukor.abezukor.autosms;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 
+import android.provider.ContactsContract;
 import android.telephony.PhoneNumberUtils;
 import android.view.View;
 import android.widget.Button;
@@ -20,6 +23,9 @@ public class RelativeLayoutActivity extends android.app.Activity {
     boolean buttonpressed = false;
     private int id;
     boolean modify;
+    static final int PICK_CONTACT=1;
+    private EditText contactNumber;
+
     protected void onCreate(Bundle savedInstanceState) {
         //code here runs when the app starts
         //sets the acrivity
@@ -57,7 +63,48 @@ public class RelativeLayoutActivity extends android.app.Activity {
             name.setFocusable(false);
 
         }
+
+        contactNumber = (EditText) findViewById(R.id.number);
+
+        Button buttonPickContact = (Button)findViewById(R.id.pickContact);
+        buttonPickContact.setOnClickListener(new Button.OnClickListener(){
+
+            @Override
+            public void onClick(View arg0) {
+                // TODO Auto-generated method stub
+
+                Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.CommonDataKinds.Phone.CONTENT_URI);
+                startActivityForResult(intent, 1);
+
+
+            }});
     }
+
+
+
+    //This code is from https://stackoverflow.com/questions/12123302/android-showing-phonebook-contacts-and-selecting-one
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // TODO Auto-generated method stub
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == PICK_CONTACT){
+            if(resultCode == RESULT_OK){
+                Uri contactData = data.getData();
+                Cursor cursor =  getContentResolver().query(contactData, null, null, null, null);
+                cursor.moveToFirst();
+
+                String number =  cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.NUMBER));
+
+                //contactName.setText(name);
+                contactNumber.setText(number);
+                //contactEmail.setText(email);
+            }
+        }
+    }
+
+
     public void savemessage(View view) {
         //to save a AutoSMS
         buttonpressed = true;
