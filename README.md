@@ -15,3 +15,6 @@
  limitations under the License.
 
 An Android app that lets you create a home screen shortcut to send a text. You should be able to just install the included binary or the APK in th app folder, this one may be a more updated version of the app.
+
+
+Privacy policy located at: http://autosms.abezukor.com/privacy.html
