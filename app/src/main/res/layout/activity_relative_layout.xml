@@ -2,16 +2,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent"
     android:id="@+id/newsms">
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Save"
-        android:id="@+id/button2"
-        android:onClick="savemessage"
-        android:layout_below="@+id/name"
-        android:layout_centerHorizontal="true" />
-
     <!--<TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -33,52 +23,46 @@
         android:layout_alignParentLeft="true"
         android:hint="Phone Number"
         />
-
-    <!--<TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Message"
-        android:id="@+id/messagetxt"
-        android:layout_below="@id/number"
-        android:layout_alignParentLeft="true"
-        android:gravity="center"/>-->
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/message"
-        android:layout_below="@+id/number"
-        android:layout_alignParentRight="true"
-       android:layout_alignParentLeft="true"
-        android:hint="Message"
-        />
-
-    <!--<TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Name"
-        android:id="@+id/nametext"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/messagetxt"
-        android:gravity="center"
-        />-->
-
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/name"
         android:layout_alignParentRight="true"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/message"
+        android:layout_below="@+id/number"
         android:hint="Name"
         />
 
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/message"
+        android:layout_below="@+id/name"
+        android:layout_alignParentRight="true"
+       android:layout_alignParentLeft="true"
+        android:hint="Message"
+        />
 
 
     <Button
-        android:layout_width="wrap_content"
+        android:id="@+id/pickContact"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Pick Contact"
+        android:layout_below="@+id/message"/>
+
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Save"
+        android:id="@+id/button2"
+        android:onClick="savemessage"
+        android:layout_below="@+id/pickContact"
+        android:layout_centerHorizontal="true" />
+
+
+    <Button
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="Delete"
         android:id="@+id/deletebutton"

@@ -13,7 +13,7 @@ import android.provider.Settings;
  */
 public class DBHandler extends SQLiteOpenHelper {
     //sets all the basic values
-    private static final int DATABASE_VERSION = 4;
+    private static final int DATABASE_VERSION = 5;
     private static final String DATABASE_NAME = "autosms.db";
     private static final String TABLE_AUTOSMSTABLE = "autosmstable";
     private static final String COLUMN_ID = "_id";
@@ -31,7 +31,7 @@ public class DBHandler extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String createquery = "CREATE TABLE " + TABLE_AUTOSMSTABLE + "(" +
                 COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                COLUMN_HOMESCREENNAME + " TEXT ," + COLUMN_NUMBER + " BIGINT ," + COLUMN_MESSAGE + " TEXT " +
+                COLUMN_HOMESCREENNAME + " TEXT ," + COLUMN_NUMBER + " TEXT ," + COLUMN_MESSAGE + " TEXT " +
                 ");";
         db.execSQL(createquery);
     }
@@ -39,8 +39,13 @@ public class DBHandler extends SQLiteOpenHelper {
     //whenever the database is upgraded
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_AUTOSMSTABLE);
-        onCreate(db);
+
+        //autoSMSObject[] autoSMSes = this.getAllData(db);//gets all the previous data
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_AUTOSMSTABLE);//Deletes the old table
+        onCreate(db);// Makes a new Table
+        /*for(autoSMSObject autoSMS: autoSMSes){// Re-adds all the data
+            this.addautosms(autoSMS);
+        }*/
 
     }
     //add new row / automs message
@@ -103,9 +108,11 @@ public class DBHandler extends SQLiteOpenHelper {
         }
     }*/
     //returns all data
-    public autoSMSObject[] getAllData(){
+    public autoSMSObject[] getAllData(SQLiteDatabase db){
         //gets the database
-        SQLiteDatabase db = getWritableDatabase();
+        if(db==null) {
+            db = getWritableDatabase();
+        }
         //sets up query
         String query = "SELECT "+COLUMN_ID+","+ COLUMN_HOMESCREENNAME+"," + COLUMN_NUMBER+"," + COLUMN_MESSAGE +  " FROM " + TABLE_AUTOSMSTABLE + " WHERE 1";
         Cursor c = db.rawQuery(query, null);
@@ -152,7 +159,7 @@ public class DBHandler extends SQLiteOpenHelper {
         c.moveToFirst();
         //checks i result is null
         if( c != null && c.moveToFirst()) {
-            results[0] = Integer.toString(c.getInt(c.getColumnIndex(COLUMN_NUMBER)));
+            results[0] = c.getString(c.getColumnIndex(COLUMN_NUMBER));
             results[1] = c.getString(c.getColumnIndex(COLUMN_MESSAGE));
             results[2] = c.getString(c.getColumnIndex(COLUMN_HOMESCREENNAME));
             db.close();

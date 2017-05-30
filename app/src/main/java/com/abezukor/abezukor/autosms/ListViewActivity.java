@@ -81,7 +81,7 @@ public class ListViewActivity extends android.app.Activity implements View.OnCli
     public void polpulatelist() {
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
         //try{
-        autoSMSObject[] data = dbHandler.getAllData();
+        autoSMSObject[] data = dbHandler.getAllData(null);
         TableLayout table = (TableLayout) findViewById(R.id.table);
         int rownumber = 0;
         while ( rownumber <dbHandler.getnumberofrows()) {
