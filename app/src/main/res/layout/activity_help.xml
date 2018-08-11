@@ -55,14 +55,14 @@
         android:layout_alignParentStart="true" />
 
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Then enter the number you want to sent the text to, the message you want texted, and the name of the shortcut on your home screen."
-        android:id="@+id/entertxt"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@id/addbtnimg"/>
+        <TextView
+            android:id="@+id/entertxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/addbtnimg"
+            android:text="Then enter the number you want to sent the text to, the message you want texted, and the name of the shortcut on your home screen. You can also tap the pick contact button to pick a contact for the AutoSMS to go to."
+            android:textAppearance="?android:attr/textAppearanceMedium" />
     <ImageView
         android:layout_width="180sp"
         android:layout_height="320sp"
@@ -79,29 +79,37 @@
         android:id="@+id/savetxt"
         android:layout_alignParentLeft="true"
         android:layout_below="@id/textenterimg"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Now there should be a dynamic shortcut under AutoSMS. To access it, tap and hold on the AutoSMS icon."
+            android:id="@+id/shortcuttxt"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/savetxt"/>
+
         <ImageView
             android:layout_width="180sp"
             android:layout_height="320sp"
-            android:id="@+id/savebtning"
-            android:src="@drawable/save"
-            android:layout_below="@+id/savetxt"
+            android:id="@+id/Dynamicshotcut"
+            android:src="@drawable/dynamicshortcut"
+            android:layout_below="@+id/shortcuttxt"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Now there should be a shortcut on your home screen thats looks like this."
-            android:id="@+id/shortcuttxt"
+            android:text="If you would like to make the shortcut a separate icon, drag it out of the box above the AutoSMS app."
+            android:id="@+id/PinnedShortCutTxt"
             android:layout_alignParentLeft="true"
-            android:layout_below="@id/savebtning"/>
-
+            android:layout_below="@+id/Dynamicshotcut"/>
         <ImageView
             android:layout_width="180sp"
             android:layout_height="320sp"
-            android:id="@+id/shotcut"
-            android:src="@drawable/shortcut"
-            android:layout_below="@+id/shortcuttxt"
+            android:id="@+id/PinnedShortCutIMG"
+            android:src="@drawable/pinnedshortcut"
+            android:layout_below="@+id/PinnedShortCutTxt"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true" />
 

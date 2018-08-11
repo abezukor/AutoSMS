@@ -49,7 +49,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
     }
     //add new row / automs message
-    public int addautosms (autoSMSObject autosmsObject){
+    public int addautosms (AutoSMSObject autosmsObject){
         //sets up the list
         ContentValues values = new ContentValues();
 
@@ -108,7 +108,7 @@ public class DBHandler extends SQLiteOpenHelper {
         }
     }*/
     //returns all data
-    public autoSMSObject[] getAllData(SQLiteDatabase db){
+    public AutoSMSObject[] getAllData(SQLiteDatabase db){
         //gets the database
         if(db==null) {
             db = getWritableDatabase();
@@ -127,10 +127,10 @@ public class DBHandler extends SQLiteOpenHelper {
         //System.out.println("Cursor is: " + c);
 
         //get sting 2d arrayi
-        autoSMSObject[] results = new autoSMSObject[(int)numRows+1];
+        AutoSMSObject[] results = new AutoSMSObject[(int)numRows+1];
 
         while (!c.isAfterLast()){
-            autoSMSObject row = new autoSMSObject(c.getString(c.getColumnIndex(COLUMN_HOMESCREENNAME)), c.getString(c.getColumnIndex(COLUMN_NUMBER)),
+            AutoSMSObject row = new AutoSMSObject(c.getString(c.getColumnIndex(COLUMN_HOMESCREENNAME)), c.getString(c.getColumnIndex(COLUMN_NUMBER)),
                     c.getString(c.getColumnIndex(COLUMN_MESSAGE)), c.getInt(c.getColumnIndex(COLUMN_ID)));
 
             //System.out.println("Cursor is: " + c);

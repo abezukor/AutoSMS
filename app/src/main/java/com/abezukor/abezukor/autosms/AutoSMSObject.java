@@ -3,22 +3,27 @@ package com.abezukor.abezukor.autosms;
 /**
  * Created by abezu on 7/19/2016.
  */
-public class autoSMSObject {
+public class AutoSMSObject {
     //declares object properties
     private int _id;
     private String _homescreenname;
     private String _number;
     private String _message;
 
-    //empty contructor
-    public autoSMSObject(){}
-
     //full constructor
-    public autoSMSObject(String _homescreenname, String _number, String _message, int id) {
+    public AutoSMSObject(String _homescreenname, String _number, String _message, int id) {
         this._homescreenname = _homescreenname;
         this._number = _number;
         this._message = _message;
         this._id = id;
+
+        //System.out.println("AutoSMS Object id: " + this._id);
+    }
+    //without Id constructor
+    public AutoSMSObject(String _homescreenname, String _number, String _message){
+        this._homescreenname = _homescreenname;
+        this._number = _number;
+        this._message = _message;
 
         //System.out.println("AutoSMS Object id: " + this._id);
     }

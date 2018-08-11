@@ -1,5 +1,6 @@
 package com.abezukor.abezukor.autosms;
 
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -21,10 +22,10 @@ import android.widget.Toast;
 public class RelativeLayoutActivity extends android.app.Activity {
     //sets classwide varibels
     boolean buttonpressed = false;
-    private int id;
     boolean modify;
     static final int PICK_CONTACT=1;
     private EditText contactNumber;
+    private int id;
 
     protected void onCreate(Bundle savedInstanceState) {
         //code here runs when the app starts
@@ -38,7 +39,7 @@ public class RelativeLayoutActivity extends android.app.Activity {
         Intent intent = getIntent();
         modify = intent.getBooleanExtra("tomodify", false);
         //gets the id
-        id = intent.getIntExtra("id", -1);
+        id=intent.getIntExtra("id", -1);
         //System.out.println("Rel Layout id " + id);
         //this will run if it was from the tapped list
         if (modify){
@@ -108,11 +109,12 @@ public class RelativeLayoutActivity extends android.app.Activity {
     public void savemessage(View view) {
         //to save a AutoSMS
         buttonpressed = true;
+        Context context = getApplicationContext();
         //gets input boxes
-        EditText message = (EditText)findViewById(R.id.message);
-        EditText number = (EditText)findViewById(R.id.number);
-        EditText name = (EditText)findViewById(R.id.name);
-        if  (!message.getText().toString().isEmpty() && !number.getText().toString().isEmpty() &&  !name.getText().toString().isEmpty()) {
+        EditText message = findViewById(R.id.message); String messageText = message.getText().toString();
+        EditText number = findViewById(R.id.number); String numberText = number.getText().toString();
+        EditText name = findViewById(R.id.name); String nameText = name.getText().toString();
+        if  (!messageText.isEmpty() && !numberText.isEmpty() &&  !nameText.isEmpty()) {
             //sets contact to add
 
             DBHandler dbHandler = new DBHandler(this,null,null,1);
@@ -120,19 +122,18 @@ public class RelativeLayoutActivity extends android.app.Activity {
                 //if you are not modifying a pre written AutoSMS
 
                 //create the custom object
-                autoSMSObject autosms = new autoSMSObject(name.getText().toString(), number.getText().toString(), message.getText().toString(), id );
+                AutoSMSObject autosms = new AutoSMSObject(nameText, numberText, messageText);
 
                 try{
-                   id =  dbHandler.addautosms(autosms);
+                   autosms.set_id(dbHandler.addautosms(autosms));
                 }catch (Exception e){}
+                DynamicShortcuts shortcutMaker = new DynamicShortcuts();
+                shortcutMaker.createShortcut(shortcutMaker.makeShortCutInfo(autosms,context),context,autosms);
+
             } else {
-                dbHandler.modifyautosmssms(id,number.getText().toString(),message.getText().toString());
+                dbHandler.modifyautosmssms(id,numberText,messageText);
             }
 
-            //checks if its a modifacation so it does not delete shortcut
-            if (!modify) {
-                ShortcutCreatorActivity(name.getText().toString());
-            }
             //go back to main page
             Intent intent = new Intent(this, ListViewActivity.class);
             intent.putExtra("button pressed", buttonpressed);
@@ -143,66 +144,10 @@ public class RelativeLayoutActivity extends android.app.Activity {
         }
         }
         //to create a shortcut
-        protected void  ShortcutCreatorActivity(String name) {
-            //System.out.println("ShortcutCreator Id is " + id);
-
-            //makes intent that is run when the shprtcut is run
-            Intent shortcutIntent = new Intent(getApplicationContext(), ShortCutActivity.class);
-            shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            shortcutIntent.putExtra("id", id);
-
-            //makes intent to make the shortcut
-            Intent addIntent = new Intent();
-            addIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
-            addIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME, name);
-            addIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, Intent.ShortcutIconResource.fromContext(getApplicationContext(), R.drawable.ic_launcher));
-
-
-            addIntent.setAction("com.android.launcher.action.INSTALL_SHORTCUT");
-            getApplicationContext().sendBroadcast(addIntent);
-
-
-            //bad alternate method
-            /*Intent shortcutIntent = new Intent();
-            shortcutIntent.setClassName("com.idtech.abezukor.autosms", "ShortCutActivity.class");
-            shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            shortcutIntent.putExtra("number", number);
-            shortcutIntent.putExtra("message", message);
-
-            Intent addIntent = new Intent();
-            addIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
-            addIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME, name);
-            addIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, Intent.ShortcutIconResource.fromContext(context, R.drawable.ic_launcher));
-
-            addIntent.setAction("com.android.launcher.action.INSTALL_SHORTCUT");
-            context.sendBroadcast(addIntent);*/
-        }
-    //tried to remove shortcut did not work
-
-    /*
-    protected void removeshortcut(String name, String number, String message) {
-        Intent shortcutIntent = new Intent();
-        shortcutIntent.setClassName("com.idtech.abezukor.autosms",
-                "com.idtech.abezukor.autosms.ShortCutActivity");
-        shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-        Intent intent = new Intent();
-        try {
-            intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT,
-                    Intent.parseUri(shortcutIntent.toUri(0), 0));
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
-        intent.setAction("com.android.launcher.action.UNINSTALL_SHORTCUT");
-        context.sendBroadcast(intent);
-    }*/
     public void deletebtn(View view){
         //when delete button is tapped
-        Toast.makeText(getApplicationContext(), "Please remove old Shortcut from home screen. AutoSMS will no longer remember it.", Toast.LENGTH_LONG).show();
-
+        DynamicShortcuts shortcuts = new DynamicShortcuts();
+        shortcuts.removeShortcut(id,this);
         //actually deletes the thing
         //System.out.println("Id is " + id);
 

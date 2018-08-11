@@ -67,7 +67,7 @@ public class ListViewActivity extends android.app.Activity implements View.OnCli
         return super.onOptionsItemSelected(item);
     }
 
-    //ad auto sms button goes to reletive layout.xml
+    //ad auto sms button goes to relative layout.xml
     public void addautosms(View view) {
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
         Intent intent = new Intent(this, RelativeLayoutActivity.class);
@@ -81,7 +81,7 @@ public class ListViewActivity extends android.app.Activity implements View.OnCli
     public void polpulatelist() {
         DBHandler dbHandler = new DBHandler(this, null, null, 1);
         //try{
-        autoSMSObject[] data = dbHandler.getAllData(null);
+        AutoSMSObject[] data = dbHandler.getAllData(null);
         TableLayout table = (TableLayout) findViewById(R.id.table);
         int rownumber = 0;
         while ( rownumber <dbHandler.getnumberofrows()) {
