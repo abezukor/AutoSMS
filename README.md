@@ -1,4 +1,6 @@
-# AutoSMS
+# AutoSMS (Deprecated)
+Due to the new Google policy change (https://android-developers.googleblog.com/2018/10/providing-safe-and-secure-experience.html) I am unpublishing this app. I could apply for an automation exception but other apps like IFTTT due to a better job of automating SMS sending anyway. This app will remain unpublished indefinitely.
+
 
  Copyright 2017 Abraham Zukor
 
